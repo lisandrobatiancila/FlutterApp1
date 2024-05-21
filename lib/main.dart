@@ -1,7 +1,12 @@
+// import 'dart:ffi';
 import 'dart:math';
 
+import 'package:fa1/screens/SampleScreen.dart';
+import 'package:fa1/screens/ShopScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +61,118 @@ class _MyHomePageState extends State<MyHomePage> {
     inputField = "";
     _inputTextFieldCTRL.text = inputField;
   }
+
+  void onPressAddition() {
+    inputField+= "+";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressNumberFour() {
+    inputField+="4";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressNumberFive() {
+    inputField+="5";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressNumberSix() {
+    inputField+="6";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressSubtraction() {
+    inputField+="-";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressNumberSeven() {
+    inputField+="7";
+    _inputTextFieldCTRL.text = inputField;
+  }
+  
+  void onPressNumberEight() {
+    inputField+="8";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressNumberNine() {
+    inputField+="9";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressMultiplication() {
+    inputField+="*";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressZero() {
+    inputField+="0";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressDot() {
+    inputField+=".";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressDivision() {
+    inputField+="/";
+    _inputTextFieldCTRL.text = inputField;
+  }
+
+  void onPressCompute() {
+    String value = _inputTextFieldCTRL.text;
+    String operator = "";
+    String firstOperand = "";
+    String secondOperand = "";
+    bool isNextOperand = false;
+
+    for(var i = 0; i < value.length; i ++) {
+      if (value[i] == "+") {
+        operator = "+";
+        isNextOperand = true;
+      } else if (value[i] == "-") {
+        operator = "-"; 
+        isNextOperand = true;
+      } else if (value[i] == "*") {
+        operator = "*";
+        isNextOperand = true;
+      } else if (value[i] == "/") {
+        operator = "/";
+        isNextOperand = true;
+      } else {
+        if (!isNextOperand){
+          firstOperand+= value[i];
+        } else if(isNextOperand) {
+          secondOperand+=value[i];
+        }
+      }
+    } // end of for loop
+
+    double firstOperandValue = double.parse(firstOperand);
+    double secondOperandValue = double.parse(secondOperand);
+
+    if (operator == "+") {
+      inputField = (firstOperandValue+secondOperandValue).toString();
+      _inputTextFieldCTRL.text = inputField;
+    } else if (operator == "-") {
+      inputField = (firstOperandValue-secondOperandValue).toString();
+      _inputTextFieldCTRL.text = inputField;
+    } else if (operator == "*") {
+      inputField = (firstOperandValue*secondOperandValue).toString();
+      _inputTextFieldCTRL.text = (firstOperandValue*secondOperandValue).toString();
+    } else if (operator == "/") {
+      inputField = (firstOperandValue/secondOperandValue).toString();
+      _inputTextFieldCTRL.text = (firstOperandValue/secondOperandValue).toString();
+    }
+  }
+
+  void onPressShop() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SampleScreen()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,176 +194,197 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          Column(
-            children: <Widget>[
-              Container(
-                child: Center(
-                  child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        OutlinedButton(
-                          onPressed: onPressNumberOne,
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          child: Text("1")
-                        ),
-                        OutlinedButton(
-                          onPressed: onPressNumberTwo,
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          child: Text("2")
-                        ),
-                        OutlinedButton(
-                          onPressed: onPressNumberThree,
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          child: Text("3")
-                        ),
-                        OutlinedButton(
-                          onPressed: (){},
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          child: Text("+")
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                ),
-              ),
-              Container(
-                child: Center(
-                  child: Row(
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  child: Center(
+                    child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           OutlinedButton(
-                            onPressed: (){},
+                            onPressed: onPressNumberOne,
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder()
                             ),
-                            child: Text("4")
+                            child: Text("1")
                           ),
                           OutlinedButton(
-                            onPressed: (){},
+                            onPressed: onPressNumberTwo,
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder()
                             ),
-                            child: Text("5")
+                            child: Text("2")
                           ),
                           OutlinedButton(
-                            onPressed: (){},
+                            onPressed: onPressNumberThree,
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder()
                             ),
-                            child: Text("6")
+                            child: Text("3")
                           ),
                           OutlinedButton(
-                            onPressed: (){},
+                            onPressed: onPressAddition,
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder()
                             ),
-                            child: Text("-")
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          OutlinedButton(
-                            onPressed: (){},
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("7")
-                          ),
-                          OutlinedButton(
-                            onPressed: (){},
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("8")
-                          ),
-                          OutlinedButton(
-                            onPressed: (){},
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("9")
-                          ),
-                          OutlinedButton(
-                            onPressed: (){},
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("*")
+                            child: Text("+")
                           )
                         ],
                       )
                     ],
                   ),
-                ),
-              ),
-              Container(
-                // child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder()
-                        ),
-                        onPressed: () {
-
-                        }, 
-                        child: Text("0")
-                      ),
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder()
-                        ),
-                        onPressed: () {
-
-                        }, 
-                        child: Text(".")
-                      ),
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder()
-                        ),
-                        onPressed: () {
-
-                        }, 
-                        child: Text("/")
-                      ),
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder()
-                        ),
-                        onPressed: clearInput, 
-                        child: Text("C")
-                      ),
-                    ],
                   ),
-                // ),
-              )
-            ],
+                ),
+                Container(
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            OutlinedButton(
+                              onPressed: onPressNumberFour,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("4")
+                            ),
+                            OutlinedButton(
+                              onPressed: onPressNumberFive,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("5")
+                            ),
+                            OutlinedButton(
+                              onPressed: onPressNumberSix,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("6")
+                            ),
+                            OutlinedButton(
+                              onPressed: onPressSubtraction,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("-")
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            OutlinedButton(
+                              onPressed: onPressNumberSeven,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("7")
+                            ),
+                            OutlinedButton(
+                              onPressed: onPressNumberEight,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("8")
+                            ),
+                            OutlinedButton(
+                              onPressed: onPressNumberNine,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("9")
+                            ),
+                            OutlinedButton(
+                              onPressed: onPressMultiplication,
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder()
+                              ),
+                              child: Text("*")
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  // child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder()
+                          ),
+                          onPressed: onPressZero, 
+                          child: Text("0")
+                        ),
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder()
+                          ),
+                          onPressed: onPressDot, 
+                          child: Text(".")
+                        ),
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder()
+                          ),
+                          onPressed: onPressDivision,
+                          child: Text("/")
+                        ),
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder()
+                          ),
+                          onPressed: clearInput, 
+                          child: Text("C")
+                        ),
+                      ],
+                    ),
+                  // ),
+                ),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(),
+                    minimumSize: Size(200, 45)
+                  ),
+                  onPressed: onPressCompute, 
+                  child: Text("=")
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 50.0),
+                  child: ElevatedButton(
+                    onPressed: onPressShop,
+                    child: Text(
+                      "Shop",
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.red[300]
+                    ),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       )
