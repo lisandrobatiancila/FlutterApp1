@@ -1,8 +1,7 @@
 // import 'dart:ffi';
 import 'dart:math';
 
-import 'package:fa1/screens/SampleScreen.dart';
-import 'package:fa1/screens/ShopScreen.dart';
+import 'package:fa1/screens/shop/shop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -170,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onPressShop() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SampleScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Shop()));
   }
 
   @override
@@ -369,7 +368,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text("=")
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 50.0),
+                  margin: const EdgeInsets.only(top: 50.0),
                   child: ElevatedButton(
                     onPressed: onPressShop,
                     child: Text(
