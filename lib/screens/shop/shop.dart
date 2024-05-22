@@ -1,12 +1,11 @@
 import 'dart:math';
 
+import 'package:fa1/components/cart-size.dart';
+import 'package:fa1/utils/cart/cart-model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 abstract class StudentsModel {
-  String? name;
-  int? age;
-  String? course;
-  
   Widget StudentsUI(BuildContext context);
 }
 
@@ -16,6 +15,14 @@ class Students extends StudentsModel {
   final String course;
 
   Students(this.name, this.age, this.course);
+
+  CartModel cartModel = CartModel();
+
+  void buyItem() {
+    Item item = Item(name, age, course);
+
+    cartModel.add(item);
+  }
 
   @override
   Widget StudentsUI(BuildContext context) {
@@ -32,19 +39,25 @@ class Students extends StudentsModel {
           Text(name),
           Text(age.toString()),
           Text(course),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              shape: RoundedRectangleBorder()
-            ),
-            onPressed: () {},
-            child: Text("Buy"),
-          ),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              shape: RoundedRectangleBorder()
-            ),
-            onPressed: () {},
-            child: Text("View"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget> [
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder()
+                ),
+                onPressed: buyItem,
+                child: Text("Buy"),
+              ),
+              Text(" "),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder()
+                ),
+                onPressed: () {},
+                child: Text("View"),
+              )
+            ],
           )
         ],
       ),
@@ -73,7 +86,7 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPage extends State<ShopPage> {
-  
+  CartModel cartModel = CartModel();
   final List<Students> _students = List.generate(20, (i) => Students("Mikel "+i.toString(), 23, "BSIT"));
   
   @override
@@ -85,11 +98,12 @@ class _ShopPage extends State<ShopPage> {
         actions: <Widget>[
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.add_shopping_cart,
               color: Colors.white,
             ),
-          )
+          ),
+          CartSize()
         ],
       ),
       body: ListView.builder(itemCount: _students.length, itemBuilder: (context, index) {

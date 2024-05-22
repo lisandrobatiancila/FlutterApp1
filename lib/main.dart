@@ -1,14 +1,23 @@
 // import 'dart:ffi';
 import 'dart:math';
 
+import 'package:fa1/screens/counter/counter.dart';
 import 'package:fa1/screens/shop/shop.dart';
+import 'package:fa1/utils/cart/cart-model.dart';
+import 'package:fa1/utils/counter/counter-model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CounterModel(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -169,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onPressShop() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Shop()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Counter()));
   }
 
   @override
