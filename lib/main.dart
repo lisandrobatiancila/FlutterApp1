@@ -1,10 +1,10 @@
 // import 'dart:ffi';
 import 'dart:math';
 
-import 'package:fa1/screens/counter/counter.dart';
-import 'package:fa1/screens/shop/shop.dart';
-import 'package:fa1/utils/cart/cart-model.dart';
-import 'package:fa1/utils/counter/counter-model.dart';
+import 'package:fa1/model/product.model.dart';
+import 'package:fa1/pages/add-product/add_product.dart';
+import 'package:fa1/pages/product-details/product_details.dart';
+import 'package:fa1/state/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,390 +12,109 @@ import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => CounterModel(),
-      child: const MyApp(),
-    )
-  );
+  runApp(MyAppEntry());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class MyAppEntry extends StatelessWidget {
+  Product p = Product();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter App 1'),
+      home: MyApp(titles: "Ecommerce", product: p,),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class MyApp extends StatefulWidget {
+  var titles = "Demo App";
+  Product product;
+  MyApp({super.key, required this.titles, required this.product});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyApp createState () => _MyApp();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  String inputField = "";
-  final TextEditingController _inputTextFieldCTRL = TextEditingController();
-
-  void onPressNumberOne() {
-    inputField+="1";
-    _inputTextFieldCTRL.text = inputField;
+class _MyApp extends State<MyApp> {
+  late Product _productModel;
+  var _productSize = 0;
+  List<ProductModel> _itemList = [];
+  @override
+  void initState() {
+    super.initState();
+    _productModel = widget.product;
+    _productSize = _productModel.getAllProduct().length;
+    _itemList = _productModel.getAllProduct();
   }
-
-  void onPressNumberTwo() {
-    inputField+="2";
-    _inputTextFieldCTRL.text = inputField;
+  void onAddNewItem () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProductForm())
+    );
   }
-
-  void onPressNumberThree() {
-    inputField+="3";
-    _inputTextFieldCTRL.text = inputField;
+  void onItemDetails(ProductModel item) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductDetails()
+      )
+    );
   }
-
-  void clearInput() {
-    inputField = "";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressAddition() {
-    inputField+= "+";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressNumberFour() {
-    inputField+="4";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressNumberFive() {
-    inputField+="5";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressNumberSix() {
-    inputField+="6";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressSubtraction() {
-    inputField+="-";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressNumberSeven() {
-    inputField+="7";
-    _inputTextFieldCTRL.text = inputField;
-  }
-  
-  void onPressNumberEight() {
-    inputField+="8";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressNumberNine() {
-    inputField+="9";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressMultiplication() {
-    inputField+="*";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressZero() {
-    inputField+="0";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressDot() {
-    inputField+=".";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressDivision() {
-    inputField+="/";
-    _inputTextFieldCTRL.text = inputField;
-  }
-
-  void onPressCompute() {
-    String value = _inputTextFieldCTRL.text;
-    String operator = "";
-    String firstOperand = "";
-    String secondOperand = "";
-    bool isNextOperand = false;
-
-    for(var i = 0; i < value.length; i ++) {
-      if (value[i] == "+") {
-        operator = "+";
-        isNextOperand = true;
-      } else if (value[i] == "-") {
-        operator = "-"; 
-        isNextOperand = true;
-      } else if (value[i] == "*") {
-        operator = "*";
-        isNextOperand = true;
-      } else if (value[i] == "/") {
-        operator = "/";
-        isNextOperand = true;
-      } else {
-        if (!isNextOperand){
-          firstOperand+= value[i];
-        } else if(isNextOperand) {
-          secondOperand+=value[i];
-        }
-      }
-    } // end of for loop
-
-    double firstOperandValue = double.parse(firstOperand);
-    double secondOperandValue = double.parse(secondOperand);
-
-    if (operator == "+") {
-      inputField = (firstOperandValue+secondOperandValue).toString();
-      _inputTextFieldCTRL.text = inputField;
-    } else if (operator == "-") {
-      inputField = (firstOperandValue-secondOperandValue).toString();
-      _inputTextFieldCTRL.text = inputField;
-    } else if (operator == "*") {
-      inputField = (firstOperandValue*secondOperandValue).toString();
-      _inputTextFieldCTRL.text = (firstOperandValue*secondOperandValue).toString();
-    } else if (operator == "/") {
-      inputField = (firstOperandValue/secondOperandValue).toString();
-      _inputTextFieldCTRL.text = (firstOperandValue/secondOperandValue).toString();
-    }
-  }
-
-  void onPressShop() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Counter()));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[400],
-        title: const Text("Calculator"),
+        title: Text(widget.titles),
+        backgroundColor: Colors.blue[300],
       ),
-      body: Column(
-        children: <Widget>[
-          Center(
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: TextField(
-                controller: _inputTextFieldCTRL,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: "0.00"
-                ),
-              ),
-            ),
-          ),
+      body: ListView.builder(
+        itemCount: _productSize,
+        itemBuilder: (context, index) => 
           Container(
+            padding: const EdgeInsets.all(3.0),
+            margin: const EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                width: 1.0,
+                color: Colors.black12,
+              ),
+              borderRadius: BorderRadius.circular(10.0)
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  child: Center(
-                    child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          OutlinedButton(
-                            onPressed: onPressNumberOne,
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("1")
-                          ),
-                          OutlinedButton(
-                            onPressed: onPressNumberTwo,
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("2")
-                          ),
-                          OutlinedButton(
-                            onPressed: onPressNumberThree,
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("3")
-                          ),
-                          OutlinedButton(
-                            onPressed: onPressAddition,
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder()
-                            ),
-                            child: Text("+")
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+                Text(
+                  _itemList[index].name,
+                  style: const TextStyle(
+                    fontSize: 25.0
                   ),
                 ),
-                Container(
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            OutlinedButton(
-                              onPressed: onPressNumberFour,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("4")
-                            ),
-                            OutlinedButton(
-                              onPressed: onPressNumberFive,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("5")
-                            ),
-                            OutlinedButton(
-                              onPressed: onPressNumberSix,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("6")
-                            ),
-                            OutlinedButton(
-                              onPressed: onPressSubtraction,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("-")
-                            ),
-                          ],
-                        )
-                      ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    OutlinedButton(
+                      onPressed: () {
+                        onItemDetails(_itemList[index]);
+                      },
+                      child: const Text("Details"),
                     ),
-                  ),
+                    const Text("  "),
+                    OutlinedButton(
+                      onPressed: () {},
+                      child: const Text("Add to cart"),
+                    ),
+                  ],
                 ),
-                Container(
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            OutlinedButton(
-                              onPressed: onPressNumberSeven,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("7")
-                            ),
-                            OutlinedButton(
-                              onPressed: onPressNumberEight,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("8")
-                            ),
-                            OutlinedButton(
-                              onPressed: onPressNumberNine,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("9")
-                            ),
-                            OutlinedButton(
-                              onPressed: onPressMultiplication,
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder()
-                              ),
-                              child: Text("*")
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  // child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          onPressed: onPressZero, 
-                          child: Text("0")
-                        ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          onPressed: onPressDot, 
-                          child: Text(".")
-                        ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          onPressed: onPressDivision,
-                          child: Text("/")
-                        ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder()
-                          ),
-                          onPressed: clearInput, 
-                          child: Text("C")
-                        ),
-                      ],
-                    ),
-                  // ),
-                ),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(),
-                    minimumSize: Size(200, 45)
-                  ),
-                  onPressed: onPressCompute, 
-                  child: Text("=")
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 50.0),
-                  child: ElevatedButton(
-                    onPressed: onPressShop,
-                    child: Text(
-                      "Shop",
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.red[300]
-                    ),
-                  ),
-                )
               ],
             ),
           )
-        ],
-      )
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: onAddNewItem,
+        child: const Icon(
+          Icons.add
+        ),
+      ),
     );
   }
+
 }
