@@ -1,20 +1,24 @@
-import 'package:fa1/model/product.model.dart';
+import 'dart:collection';
 
-class Product {
-  List<ProductModel> product = [];
+import 'package:fa1/model/product.model.dart';
+import 'package:flutter/material.dart';
+
+class Product extends ChangeNotifier{
+  List<ProductModel> _product = [];
+
+  UnmodifiableListView<ProductModel> get product => UnmodifiableListView(_product);
 
   List<ProductModel> getAllProduct() {
-    product = [];
-
-    product.add(ProductModel("Hansel", 12, 5));
-    product.add(ProductModel("Fita", 6, 5));
-    product.add(ProductModel("Combi", 8, 5));
-
-    return product;
+    _product.add(ProductModel("hansel", 12, 5));
+    _product.add(ProductModel("fita", 6, 5));
+    _product.add(ProductModel("combi", 8, 5));
+    
+    return _product;
   }
 
   void addNewProduct(ProductModel item) {
-    product.add(item);
+    _product.add(item);
+    notifyListeners();
   }
 
 }

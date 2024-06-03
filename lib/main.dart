@@ -4,9 +4,10 @@ import 'dart:math';
 import 'package:fa1/model/product.model.dart';
 import 'package:fa1/pages/add-product/add_product.dart';
 import 'package:fa1/pages/product-details/product_details.dart';
+import 'package:fa1/state/cart.dart';
 import 'package:fa1/state/product.dart';
+import 'package:fa1/utility/text_update.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +17,18 @@ void main() {
 }
 
 class MyAppEntry extends StatelessWidget {
-  Product p = Product();
+  Product product = Product();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyApp(titles: "Ecommerce", product: p,),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Product>(
+          create: (context) => Product(),
+        ),
+        // ChangeNotifierProvider<Cart>(create: (context) => Cart()),
+        // Provider(create: (context) => Product())
+      ],
+      child: MyApp(titles: "Ecommerce", product: product),
     );
   }
 }
@@ -37,37 +45,58 @@ class MyApp extends StatefulWidget {
 class _MyApp extends State<MyApp> {
   late Product _productModel;
   var _productSize = 0;
-  List<ProductModel> _itemList = [];
+
   @override
   void initState() {
     super.initState();
-    _productModel = widget.product;
-    _productSize = _productModel.getAllProduct().length;
-    _itemList = _productModel.getAllProduct();
+    var t = context.read<Product>();
+    t.getAllProduct();
+    // context.read<Product>() = _productModel.getAllProduct();
   }
+  
   void onAddNewItem () {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ProductForm())
     );
   }
+
   void onItemDetails(ProductModel item) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProductDetails()
+        builder: (context) => ProductDetails(productModel: item)
       )
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<Product>(
+      builder: (context, product, child) {
+        return Scaffold(
       appBar: AppBar(
-        title: Text(widget.titles),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(widget.titles),
+            OutlinedButton(
+              onPressed: () {},
+              child: Row(
+                children: <Widget>[
+                  const Icon(
+                    Icons.shopping_cart
+                  ),
+                  Text(product.product.length.toString())
+                ],
+              ), // CART
+            )
+          ],
+        ),
         backgroundColor: Colors.blue[300],
       ),
       body: ListView.builder(
-        itemCount: _productSize,
+        itemCount: product.product.length,
         itemBuilder: (context, index) => 
           Container(
             padding: const EdgeInsets.all(3.0),
@@ -83,7 +112,7 @@ class _MyApp extends State<MyApp> {
             child: Column(
               children: <Widget>[
                 Text(
-                  _itemList[index].name,
+                  upperCaseFirstCharacter(product.product[index].name),
                   style: const TextStyle(
                     fontSize: 25.0
                   ),
@@ -93,7 +122,9 @@ class _MyApp extends State<MyApp> {
                   children: <Widget>[
                     OutlinedButton(
                       onPressed: () {
-                        onItemDetails(_itemList[index]);
+                        var item = product.product[index];
+
+                        onItemDetails(item);
                       },
                       child: const Text("Details"),
                     ),
@@ -109,11 +140,15 @@ class _MyApp extends State<MyApp> {
           )
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: onAddNewItem,
+        onPressed: () {
+          onAddNewItem();
+        },
         child: const Icon(
           Icons.add
         ),
       ),
+    );
+      },
     );
   }
 

@@ -1,18 +1,18 @@
 import 'package:fa1/model/product.model.dart';
 import 'package:fa1/state/product.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class ProductForm extends StatelessWidget {
-  Product product = Product();
   @override
-
   Widget build(BuildContext context) {
-    return AddProductForm(product: product);
+
+    return AddProductForm();
   }
 }
 class AddProductForm extends StatefulWidget{
-  Product product;
-  AddProductForm({super.key, required this.product});
+  AddProductForm({super.key});
   @override
   _ItemDetail createState () => _ItemDetail();
 }
@@ -22,14 +22,13 @@ class _ItemDetail extends State<AddProductForm> {
   late TextEditingController _itemPrice;
   late TextEditingController _itemQuantity;
   late Product _product;
-
   @override
   void initState() {
     super.initState();
     _itemName = TextEditingController();
     _itemPrice = TextEditingController();
     _itemQuantity = TextEditingController();
-    _product = widget.product;
+    _product = context.read<Product>();
   }
   
   void onAddNewProduct() {
@@ -39,11 +38,14 @@ class _ItemDetail extends State<AddProductForm> {
   
     ProductModel productItem = ProductModel(name, price, quantity);
     _product.addNewProduct(productItem);
+    Fluttertoast.showToast(msg: "${productItem.name} was added!", toastLength: Toast.LENGTH_LONG);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<Product>(
+      builder: (context, product, index) {
+        return Scaffold(
       appBar: AppBar(
         title: const Text("Add Product"),
       ),
@@ -93,6 +95,8 @@ class _ItemDetail extends State<AddProductForm> {
           ],
         ),
       ),
+    );
+      }
     );
   }
 }
