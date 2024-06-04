@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:fa1/model/product.model.dart';
 import 'package:fa1/pages/add-product/add_product.dart';
+import 'package:fa1/pages/cart-items/cart_items.dart';
 import 'package:fa1/pages/product-details/product_details.dart';
 import 'package:fa1/state/cart.dart';
 import 'package:fa1/state/product.dart';
@@ -13,23 +14,24 @@ import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(MyAppEntry());
+  runApp(
+   MultiProvider(
+    providers: [
+      ChangeNotifierProvider<Product>(create: (context) => Product()),
+      ChangeNotifierProvider<Cart>(create: (context) => Cart())
+    ],
+    child: MaterialApp(
+      home: MyAppEntry(),
+    ),
+   )
+  );
 }
 
 class MyAppEntry extends StatelessWidget {
   Product product = Product();
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<Product>(
-          create: (context) => Product(),
-        ),
-        // ChangeNotifierProvider<Cart>(create: (context) => Cart()),
-        // Provider(create: (context) => Product())
-      ],
-      child: MyApp(titles: "Ecommerce", product: product),
-    );
+    return MyApp(titles: "Ecommerce", product: product);
   }
 }
 
@@ -70,6 +72,19 @@ class _MyApp extends State<MyApp> {
     );
   }
 
+  void onAddToCart(ProductModel item) {
+    var cart = context.read<Cart>();
+    cart.addToCart(item);
+  }
+
+  void onGoToCartItems() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartPage())
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Product>(
@@ -81,13 +96,17 @@ class _MyApp extends State<MyApp> {
           children: <Widget>[
             Text(widget.titles),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: onGoToCartItems,
               child: Row(
                 children: <Widget>[
                   const Icon(
                     Icons.shopping_cart
                   ),
-                  Text(product.product.length.toString())
+                  Consumer<Cart>(
+                    builder: (context, cart, child) {
+                      return Text(cart.cartItem.length.toString());
+                    },
+                  )
                 ],
               ), // CART
             )
@@ -130,7 +149,10 @@ class _MyApp extends State<MyApp> {
                     ),
                     const Text("  "),
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        var item = product.product[index];
+                        onAddToCart(item);
+                      },
                       child: const Text("Add to cart"),
                     ),
                   ],
