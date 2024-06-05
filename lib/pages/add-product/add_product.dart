@@ -3,6 +3,7 @@ import 'package:fa1/state/product.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class ProductForm extends StatelessWidget {
   @override
@@ -36,7 +37,7 @@ class _ItemDetail extends State<AddProductForm> {
     double price = double.parse(_itemPrice.text);
     int quantity = int.parse(_itemQuantity.text);
   
-    ProductModel productItem = ProductModel(name, price, quantity);
+    ProductModel productItem = ProductModel(const Uuid().v1(), name, price, quantity);
     _product.addNewProduct(productItem);
     Fluttertoast.showToast(msg: "${productItem.name} was added!", toastLength: Toast.LENGTH_LONG);
   }

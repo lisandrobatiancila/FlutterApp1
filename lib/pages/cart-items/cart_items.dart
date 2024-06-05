@@ -1,4 +1,5 @@
 import 'package:fa1/state/cart.dart';
+import 'package:fa1/utility/text_update.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,39 @@ class _Cart extends State<CartState> {
         title: const Text("Cart Items"),
         backgroundColor: Colors.blue[300],
       ),
-      body: Text("Welcome to cart items: ${_cart.cartItem.length.toString()}"),
+      body: Container(
+        padding: const EdgeInsets.all(5.0),
+        child: ListView.builder(
+          itemBuilder: (context, index) => Container(
+            padding: const EdgeInsets.all(10.0),
+            margin: const EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                width: 1.0,
+                color: Colors.black12
+              ),
+              borderRadius: BorderRadius.circular(10.0)
+            ),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  upperCaseFirstCharacter(_cart.cartItem[index].name),
+                  style: const TextStyle(
+                    fontSize: 20.0
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("@ ${_cart.cartItem[index].price} X ${_cart.cartItem[index].quantity} = ${(_cart.cartItem[index].price * _cart.cartItem[index].quantity)}"),
+                  ])
+              ],
+            ),
+          ),
+          itemCount: _cart.cartItem.length,
+        ),
+      )
     );
   }
 }
