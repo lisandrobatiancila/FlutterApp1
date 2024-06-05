@@ -25,7 +25,7 @@ class Cart extends ChangeNotifier {
         }
       }
       if (!_isFound) {
-        cartModel = CartModel(item.id, item.name, item.price, item.quantity);
+        cartModel = CartModel(item.id, item.name, item.price, 1);
         _cartItem.add(cartModel);
       }
     }
@@ -38,5 +38,13 @@ class Cart extends ChangeNotifier {
   }
   List<CartModel> cartItems() {
     return cartItem;
+  }
+  String totalPayment() {
+    double payment = 0.0;
+    for(var index = 0; index < _cartItem.length; index++) {
+      payment += _cartItem[index].price * _cartItem[index].quantity;
+    }
+    
+    return payment.toString();
   }
 }
